@@ -1,0 +1,95 @@
+### Download data
+rsync -a /willerslev/edna/bat_guano/gargina_dupka/* /willerslev/users-shared/science-snm-willerslev-vnt552/Bat/
+
+
+### Use md5sum to check the files
+# If md5sum result is "OK", then files are downloaded completely
+md5sum --check md5sum.txt
+
+
+### Trimming using fastP
+# Files are paired end, use this to merge the reads.
+for file in *_1.fq
+  do
+  f=$(echo $file | sed -E "s/\_.*//")
+  echo ${f}_1.fq ${f}_2.fq
+  /willerslev/edna/programmes/fastp/fastp -i ${f}_1.fq -I ${f}_2.fq -m --merged_out ${f}.fast-p.ppm.fq -V --detect_adapter_for_pe -D --dup_calc_accuracy 5 -g -x -q 30 -e 25 -l 30 -y -c -p -h ${f}.fastp.report.html -w 8
+  done
+
+
+### Trim using Vsearch
+for file in *ppm.fq
+  do
+  vsearch --fastx_uniques ${file} --fastqout ${file}.vs.fq --minseqlength 30 --strand both
+done
+
+
+### Trim using SGA
+
+for file in *vs.fq
+  do
+  sga preprocess --dust-threshold=4 -m 30 $file -o $file.sga4.fq
+done
+
+### Map, sort, merge and align files with holi.sh pipeline
+# To run Holi.sh
+chmod 775 mapping.sh
+./mapping.sh &> mapping.log.txt
+
+
+
+
+##### Sort all alignment files
+for bam in *.bam
+do
+samtools sort -@ 10 -m 10G -n $bam -o sort.$bam
+done
+
+## Merge all alignment files
+for file in *.bam
+do
+echo $file
+samtools merge --verbosity 5 -o ${file}.fq.merged.sam.gz sort.GA-19.*.bam -@ 20
+done
+
+
+## Sorting the merged sam.gz file
+echo Printing header
+nice -n 5 time samtools view --threads 20  -H $bname.merged.sam.gz | gzip > $bname.merged.Header.sam.gz
+echo Printing alignment
+nice -n 5 time samtools view --threads 20 $bname.merged.sam.gz | gzip > $bname.merged.alignment.sam.gz
+echo Sorting alignment file
+time /willerslev/software/gz-sort/gz-sort -S 20G -P 10 $bname.merged.alignment.sam.gz $bname.merged.alignment.sort.sam.gz
+echo Merging Header and sorted alignment
+time zcat $bname.merged.Header.sam.gz $bname.merged.alignment.sort.sam.gz | samtools view -h -o $bname.merged.sort.sam.gz
+rm $bname.merged.Header.sam.gz $bname.merged.alignment.sam.gz $bname.merged.alignment.sort.sam.gz
+
+
+### Running metaDamage
+## data skal være en directory med sam.gz files. names, nodes and acc2tax er stier til de filer der bliver dannet under ngsLCA
+tax=/science/willerslev/edna/ncbi_taxonomy_01Oct2022
+nam=$tax/names.dmp
+nod=$tax/nodes.dmp
+ac2tax=$tax/combined_accession2taxid_20221112.gz
+
+# Activate conda metaDMG environment
+metaDMG config bat_data/*.sam.gz -m /willerslev/edna/programmes/metaDMG-cpp/metaDMG-cpp --names $nam --nodes $nod --acc2tax $ac2tax
+metaDMG compute config.yaml
+metaDMG convert config.yaml -a --output ./data/results/${sname}.results.csv.gz
+
+
+#conda install gsl=2.7
+# Make metaDMG config file
+metaDMG config bat_data/holi_results/*61.fast-p.ppm.fq.vs.fq.sga4.fq.merged.sort.sam.gz \
+    --names /science/willerslev/edna/ncbi_taxonomy_01Oct2022/names.dmp \
+    --nodes /science/willerslev/edna/ncbi_taxonomy_01Oct2022/nodes.dmp \
+    --acc2tax /science/willerslev/edna/ncbi_taxonomy_01Oct2022/combined_accession2taxid_20221112.gz \
+    --metaDMG-cpp /willerslev/edna/programmes/metaDMG-cpp/metaDMG-cpp \
+    --min-similarity-score 0.90 \
+    --config-file config_0.9_1.yaml \
+    --output-dir bat_data/results_0.9
+
+# Run metaDMG
+metaDMG compute config_GarginaDupka.yaml
+metaDMG convert config_GarginaDupka.yaml --output ./bat_data/results/results/results.csv.gz
+
