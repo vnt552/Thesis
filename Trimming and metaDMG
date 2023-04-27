@@ -37,40 +37,7 @@ chmod 775 mapping.sh
 ./mapping.sh &> mapping.log.txt
 
 
-
-
-##### Sort all alignment files
-for bam in *.bam
-do
-samtools sort -@ 10 -m 10G -n $bam -o sort.$bam
-done
-
-## Merge all alignment files
-for file in *.bam
-do
-echo $file
-samtools merge --verbosity 5 -o ${file}.fq.merged.sam.gz sort.GA-19.*.bam -@ 20
-done
-
-
-## Sorting the merged sam.gz file
-echo Printing header
-nice -n 5 time samtools view --threads 20  -H $bname.merged.sam.gz | gzip > $bname.merged.Header.sam.gz
-echo Printing alignment
-nice -n 5 time samtools view --threads 20 $bname.merged.sam.gz | gzip > $bname.merged.alignment.sam.gz
-echo Sorting alignment file
-time /willerslev/software/gz-sort/gz-sort -S 20G -P 10 $bname.merged.alignment.sam.gz $bname.merged.alignment.sort.sam.gz
-echo Merging Header and sorted alignment
-time zcat $bname.merged.Header.sam.gz $bname.merged.alignment.sort.sam.gz | samtools view -h -o $bname.merged.sort.sam.gz
-rm $bname.merged.Header.sam.gz $bname.merged.alignment.sam.gz $bname.merged.alignment.sort.sam.gz
-
-
-### Running metaDamage
-## data skal være en directory med sam.gz files. names, nodes and acc2tax er stier til de filer der bliver dannet under ngsLCA
-tax=/science/willerslev/edna/ncbi_taxonomy_01Oct2022
-nam=$tax/names.dmp
-nod=$tax/nodes.dmp
-ac2tax=$tax/combined_accession2taxid_20221112.gz
+## After running holi.sh, continue with metaDMG
 
 # Activate conda metaDMG environment
 metaDMG config bat_data/*.sam.gz -m /willerslev/edna/programmes/metaDMG-cpp/metaDMG-cpp --names $nam --nodes $nod --acc2tax $ac2tax
