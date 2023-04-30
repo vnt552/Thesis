@@ -15,90 +15,90 @@ echo $basepath
 for DB in /willerslev/datasets/ncbi_nt_Nov2020/nt.fa.?
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/datasets/refseq_23dec2020/vertebrate_other/vertebrate_other.?
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/datasets/refseq_23dec2020/vertebrate_mammalian/vertebrate_mammalian.?
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/edna/database/Homo_sapiens/homo_sapiens.fa?
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/datasets/refseq_23dec2020/invertebrate/invertebrate.?
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/datasets/refseq_23dec2020/archaea_fungi_virus/archaea_fungi_virus.fa
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/datasets/ycw/polar_animals/arctic_animals.fa
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/datasets/ycw/polar_animals/arctic_animals_other.fa
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/datasets/ycw/polar_animals/arctic_animal_b3.fa
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/datasets/refseq_23dec2020/plant/plant.?
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/datasets/refseq_23dec2020/protozoa/protozoa.fa
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/datasets/ycw/norway_plant_ctgenoms/complete_genomes/final_db/norPlantCom.?
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 for DB in /willerslev/edna/antonio/geogenetics/DBs/gtdb/r202/bowtie2/gtdb-r202.?
 do
 echo Mapping $bname against $DB
-nice -n 5 bowtie2 --threads 60 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
+nice -n 5 bowtie2 --threads 20 -k 5000 -x $DB -U $bname --no-unal | samtools view -bS - > $bname.$(basename $DB).bam
 done
 
 
 ## Merging all alignment files
-samtools merge --verbosity 5  $bname.merged.sam.gz $bname*.bam -@ 60
+samtools merge --verbosity 5  $bname.merged.sam.gz $bname*.bam -@ 20
 
 ## Sorting the merged sam.gz file
 echo Printing header
-nice -n 5 time samtools view --threads 60  -H $bname.merged.sam.gz | gzip > $bname.merged.Header.sam.gz
+nice -n 5 time samtools view --threads 20  -H $bname.merged.sam.gz | gzip > $bname.merged.Header.sam.gz
 echo Printing alignment
-nice -n 5 time samtools view --threads 60 $bname.merged.sam.gz | gzip > $bname.merged.alignment.sam.gz
+nice -n 5 time samtools view --threads 20 $bname.merged.sam.gz | gzip > $bname.merged.alignment.sam.gz
 echo Sorting alignment file
 time /willerslev/software/gz-sort/gz-sort -S 30G -P 10 $bname.merged.alignment.sam.gz $bname.merged.alignment.sort.sam.gz
 echo Merging Header and sorted alignment
