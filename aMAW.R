@@ -55,3 +55,25 @@ pheatmap(
   cluster_cols = F
 )
 
+
+                                          
+                                          
+### Damage Estimates
+# Read damage file
+tp_mdmg <- read_csv("aMAW/tp-mdmg.lca.weight-1.csv.gz")
+tp_mdmg$sample <- factor(tp_mdmg$sample , levels=c("GA-11", "GA-19", "GA-31", "GA-41", "GA-61", "GA-71", "GA-81", "GA-91", "GA-111", "GA-121", "GA-131", "GA-141", "GA-161", "GA-181", "GA-191", "GA-Cex", "GA-Cli"))
+
+# filter data
+above_200reads <- tp_mdmg %>% filter(N_reads>=200, grepl("\\bd__Bacteria\\b", tax_path))
+
+# plot damage estimates across samples
+nb.cols <- 15
+mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nb.cols)
+
+ggplot(above_200reads, aes(y = D_max, x = sample, color=tax_rank)) +
+  geom_point()+
+  scale_color_manual(values = mycolors) +
+  theme_bw() +
+  xlab("Sample") +
+  ylab("Damage Max") +
+  ggtitle("Damage on Samples >= 200 Reads", subtitle = "Bacteria")
