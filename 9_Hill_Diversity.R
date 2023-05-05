@@ -16,6 +16,9 @@ alpha_hill_matrix <- alpha_wide_matrix[,-1]
 alpha_hill_species_list <- alpha_wide_matrix[,1]
 t_alpha <- t(alpha_hill_matrix)
 
+# For Beta diversity, use normalized insect data
+norm_insecta
+
 
 # Diversity using hillR package
 library(hillR)
@@ -32,9 +35,9 @@ hill_parti_q1 <- hill_taxa_parti(t_alpha, q=1)
 hill_parti_q2 <- hill_taxa_parti(t_alpha, q=2)
 
 # alpha and beta diversity grouped
-hill_parti_pairwise_q0 <- hill_taxa_parti_pairwise(t_alpha_norm, q=0, output = "matrix")
-hill_parti_pairwise_q1 <- hill_taxa_parti_pairwise(t_alpha_norm, q=1, output = "matrix")
-hill_parti_pairwise_q2 <- hill_taxa_parti_pairwise(t_alpha_norm, q=2, output = "matrix")
+hill_parti_pairwise_q0 <- hill_taxa_parti_pairwise(norm_insecta, q=0, output = "matrix")
+hill_parti_pairwise_q1 <- hill_taxa_parti_pairwise(norm_insecta, q=1, output = "matrix")
+hill_parti_pairwise_q2 <- hill_taxa_parti_pairwise(norm_insecta, q=2, output = "matrix")
 
 
 ## Diversity per order.q plot
