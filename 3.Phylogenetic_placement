@@ -136,7 +136,7 @@ mafft --thread 20 merged_samples_and_refDB.fa > merged_samples_and_refDB_aligned
 new name: merged_samples_and_refDB_aligned_newname.fa
 
 # make a tree
-raxml-ng --search --msa merged_samples_and_refDB_aligned_newname.fa --model GTR+G --prefix EleMT_merged --threads 2 --seed 2
+raxml-ng --all --msa merged_samples_and_refDB_aligned_newname.fa --model GTR+G --prefix EleMT_merged --threads 2 --seed 2
 
 
 # STEP 15
