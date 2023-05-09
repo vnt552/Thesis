@@ -32,7 +32,7 @@ cat rm.list | parallel -j20 "rm {}"
 mkdir fq_link
 ln -s /willerslev/users-shared/science-snm-willerslev-vnt552/Bat/Results/data_not_mapped/*.sga4.fq fq_link
 
-
+# extract the reads from the readID.txt from the .fq files
 ### seqtk gave many problems, don't run subseq and seq -a in a one liner, diviede it into two.
 for infile in *readID.txt
 do
@@ -73,21 +73,18 @@ mafft --thread 20 refseq_chiroptera_mt.fasta > refseq_chiroptera_mt_aligned.fast
 #building quick tree #View tree on http://etetoolkit.org/treeview/
 raxml-ng --search1 --msa refseq_chiroptera_mt_aligned_newname.fasta --model GTR+G --prefix aligned --threads 2 --seed 2
 
-
-
-############ NOW THE MT DATA FROM THE SAMPLES ##############
-### Manipulating your data
-# make consensus a mt genome from all reads / or make consesus mt genome for individual reads / or both!
-
-
 # STEP 7
 ## Make a database from the ncbi refgenomes
 bowtie2-build refseq_chiroptera_mt.fasta refseq_chiroptera_mt
 mkdir chiroptera_mt_db
 
 
+############ NOW THE MT DATA FROM THE SAMPLES ##############
+### Manipulating your data
+# make consensus a mt genome from all reads / or make consesus mt genome for individual reads / or both!
+
 # STEP 8
-######## map all individual reads against the reference
+######## align all individual reads against the reference
 for file in *.fq
 do
 db=/willerslev/users-shared/science-snm-willerslev-vnt552/Bat/Results/mt_phylogenetics/mt_chiroptera/ref_seq_db/refseq_chiroptera_mt
