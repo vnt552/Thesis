@@ -99,6 +99,75 @@ ggdraw() +
                   x = c(0, 0.3, .6), y = c(0.7, 0.7, 0.7))
 
 
+### testing Pb concentration and alpha diversity
+# reorder data by age
+shannon_pb<-shannon_pb[order(shannon_pb$Age_BC,decreasing = FALSE),]
+
+chart.Correlation(shannon_pb[,-1],method = "spearman")
+# Log-transform Pb_mean to make its distribution more symmetric. Linear models
+# work better with explanatory variables with a symmetric ditribution.
+shannon_pb$log_pb_mean<-log(shannon_pb$Pb_mean)
+chart.Correlation(shannon_pb[,-1],method = "spearman")
+
+
+##MODEL FOR SPECIES RICHNESS
+
+M_richness<-gls(Richness~log_pb_mean+Age_BC,data = shannon_pb)
+
+# The residual plot looks OK
+plot(M_richness)
+res_richness<-residuals(M_richness,type="normalized")
+
+# There is temporal autocorrelation in lag 1.
+acf(res_richness)
+
+# Use an auto regressive model of order 1.
+M_richness_AR1<-gls(Richness~log_pb_mean+Age_BC,data = shannon_pb,method = "REML",
+                      correlation = corAR1())
+
+AIC(M_richness,M_richness_AR1)
+
+# The residual plot has improved and there is no significant temporal autocorrelation anymore
+res_richness_AR1<-residuals(M_richness_AR1,type="normalized")
+acf(res_richness_AR1)
+
+
+# Proceed to inference
+summary(M_richness_AR1)
+# No significant association between age or Pb_mean and diet species richness.
+
+# Phi = 0.88 in summary output indicates that observations separated by one time 
+# lag had a correlation of 0.88.
+
+
+## MODEL FOR SHANNON DIVERSITY
+M_shannon<-gls(Shannon_div~log_pb_mean+Age_BC,data = shannon_pb)
+
+# The residual plot looks OK
+plot(M_shannon)
+res_shannon<-residuals(M_shannon,type="normalized")
+
+# No temporal autocorrelation in residuals.
+acf(res_shannon)
+
+# Proceed to inference
+summary(M_shannon)
+# There is significant negative association between Pb_mean and diet diversity (Shannon index)
+
+## MODEL FOR SIMPSON DIVERSITY
+M_simpson<-gls(Simpson_div~log_pb_mean+Age_BC,data = shannon_pb)
+
+# The residual plot looks OK
+plot(M_simpson)
+res_simpson<-residuals(M_simpson,type="normalized")
+
+# No temporal autocorrelation in residuals.
+acf(res_simpson)
+
+# Proceed to inference
+summary(M_simpson)
+# There is significant negative association between Pb_mean and diet diversity (Simpson index)
+
 
 
 ####################### Beta Diversity #####################
@@ -151,6 +220,10 @@ ggplot() +
   scale_color_manual(values = mycolors) +
   ggtitle("NMDS, Insecta, Jaccard Dissimilarity Matrix, Stress = 0.19", subtitle = "hillR, Normalized")
 
+### testing Pb concentration and Jaccard diversity using envfit and adonis2
+m<- data.frame(shannon_pb$Pb_mean, shannon_pb$Depth)
+envfit(jaccard_nmds,m)
+adonis2(beta_matrix_jac ~ Pb_mean + Depth, data= shannon_pb)
 
 ################### PCoA plots
 pcoa.bray <- cmdscale(beta_matrix_bc, k = 3, eig = T)
@@ -198,6 +271,7 @@ legend <- get_legend(pcoa.jac.plot)
 
 # plot Bray-Curtis PCoA and Jaccard PCoA side by side
 plot_grid(pcoa.bray.plot + theme(legend.position = 'none'), pcoa.jac.plot + theme(legend.position = 'none'), legend, ncol = 3, rel_widths = c(1,1,0.5))
+
 
 
 
