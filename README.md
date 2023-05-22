@@ -1,5 +1,5 @@
 # Thesis
 
 This Github contains the Unix and R scripts used for this Master's Thesis.
-1 is trimmig of the reads, 2 is the holi script used for mapping.
-4 and forward all contains R scripts used to analyse the data
+Chapter 1 is the unix scripts, trimming, holi and phylogenetic placement.
+Chapter 2 is the R scripts, for Simka, normalizing the data, Hill diversity and statistics.
