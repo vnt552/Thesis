@@ -43,7 +43,7 @@ PC_geo = st_set_crs(locations_Plovdiv_sf, "EPSG:4326")
 KCM_geo = st_set_crs(locations_KCM_sf, "EPSG:4326")
 st_is_longlat(PC_geo)
 
-# alle tre lokation på en
+# add all three locations in the plot
 plovdiv_all <- data.frame(Location_Name = c("NFMC Plovdiv", "Plovdiv City", "GD Cave"),
                           LONG = c(24.819939013206813, 24.746768037910428, 24.93342432704344), 
                           LAT = c(42.06462668698429, 42.14470932091504, 41.85290443998376))
@@ -95,33 +95,6 @@ map_eu_bg_el <- map_eu + tm_shape(bgr) + tm_raster(style = "cont") +
   tm_layout(legend.show = FALSE)
 map_eu_bg_el
 
-
-##### Plovdiv region
-world_shape <- read_sf("Raster/ne_10m_admin_1_states_provinces.shp")
-regions <- world_shape[world_shape$iso_a2== "BG",]
-plovdiv_regions <- regions %>% filter(name %in% c("Smolyan", "Plovdiv", "Kardzhali"))
-
-
-############## Make map only of bulgaria in green ##########
-map_bg <- tm_shape(bg) +
-  tm_fill("darkolivegreen3") +
-  tm_polygons() +
-  tm_shape(locations_sf) +
-  tm_dots(size = .1) +
-  tm_text("Location_Name", xmod=1.5)
-map_bg
-
-### Add North star and measuring lable
-map_bg +  
-  tm_shape(europe) +
-  tm_borders(lty = "dashed") + 
-  #tm_text(text="NAME_ENGL")+
-  tm_compass(type = "8star", position = c("left", "top"), size = 2) +
-  tm_scale_bar(breaks = c(0, 100, 200), text.size = 0.5) +
-  tm_layout(inner.margins = 0.2) +
-  tm_layout(frame = FALSE, legend.outside = TRUE, main.title = "Map of Bulgaria", main.title.size = 0.9)
-
-print(map_eu_bg, vp = grid::viewport(0.15, 0.2, width = 0.6, height = 0.4))
 
 ########## Map of Bulgaria with elevation ############
 map_bg2 <- tm_shape(bgr) +
@@ -239,10 +212,4 @@ bg_GD_buffer30
 print(bg_corner_map, vp = grid::viewport(0.15, 0.15, width = 0.5, height = 0.3))
 
 
-
-### Corina Land Cover
-clc_bulgaria <- read_stars("U2018_CLC2018_V2020_20u1.tif")
-tm_shape(bg) + tm_polygons() +
-  tm_shape(clc_bulgaria) + tm_raster() +
-  tm_shape(bg) + tm_borders()
 
